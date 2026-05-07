@@ -1,0 +1,13 @@
+services:
+  push_notification_service:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    image: push_notification_service
+    container_name: push_notification_service_container
+    command: python manage.py runserver 0.0.0.0:8000
