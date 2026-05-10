@@ -29,6 +29,8 @@ class SendNotificationAPIView(APIView):
 
     def post(self, request: Request):
         serializer = SendNotificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
         user = get_object_or_404(User, id=serializer.validated_data['user_id'])
 
         notification = NotificationService.create_notification(
