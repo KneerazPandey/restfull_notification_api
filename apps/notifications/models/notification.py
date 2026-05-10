@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Notifications(models.Model):
+class Notification(models.Model):
     class NotificationType(models.TextChoices):
         SYSTEM = "system", "System"
         AUTHENTICATION = "authentication", "Authentication"

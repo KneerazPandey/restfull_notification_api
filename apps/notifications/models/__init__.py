@@ -1,2 +1,2 @@
-from .notifications import Notifications
+from .notification import Notification
 from .device_token import DeviceToken
