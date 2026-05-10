@@ -8,9 +8,27 @@ https://docs.djangoproject.com/en/6.0/howto/deployment/asgi/
 """
 
 import os
-
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'push_notification.settings')
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'push_notification.settings')
+django_asgi_application = get_asgi_application()
 
-application = get_asgi_application()
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+
+from core.middleware import JWTAuthMiddleware
+
+from .routing import websocket_urlpatterns
+
+
+def JWTAuthMiddlewareStack(inner):
+    return JWTAuthMiddleware(
+        AuthMiddlewareStack(inner)
+    )
+
+application = ProtocolTypeRouter({
+    'http': django_asgi_application,
+    'websocket': JWTAuthMiddlewareStack(
+        URLRouter(websocket_urlpatterns)
+    )
+})

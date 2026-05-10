@@ -2,6 +2,8 @@ from django.utils import timezone
 from apps.notifications.models import Notification
 from django.contrib.auth import get_user_model
 from apps.notifications.selectors import NotificationSelectors
+from apps.notifications.events import NotificationCreatedEvent
+from core.events.dispatcher import EventDispatcher
 
 
 User = get_user_model()
@@ -18,6 +20,15 @@ class NotificationService:
             notification_type=notification_type,
             metadata=metadata or {}
         )
+
+        event = NotificationCreatedEvent(
+            notification_id=notification.id,
+            recipient_id=notification.recipient.id,
+            title=notification.title,
+            body=notification.body
+        )
+
+        EventDispatcher.dispatch(event=event)
 
         return notification
 
