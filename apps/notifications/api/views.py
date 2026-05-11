@@ -8,7 +8,8 @@ from apps.notifications.models import Notification
 from apps.notifications.services import NotificationService
 from apps.notifications.selectors import NotificationSelectors
 from apps.notifications.api.serializers import (
-    NotificationSerializer, SendNotificationSerializer, BroadcastNotificationSerializer
+    NotificationSerializer, SendNotificationSerializer, BroadcastNotificationSerializer,
+    DeviceTokenSerializer
 )
 
 
@@ -111,4 +112,22 @@ class GetUnreadNotificationCountAPIView(APIView):
 
         return Response({
             'unread_count': count
+        })
+    
+
+class RegisterDeviceAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request):
+        serializer = DeviceTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        NotificationService.update_or_create_device_token(
+            device_type=serializer.validated_data['device_type'],
+            token=serializer.validated_data['token'],
+            user=request.user, 
+        )
+
+        return Response({
+            'message': 'Device Register'
         })

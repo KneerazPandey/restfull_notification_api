@@ -1,5 +1,5 @@
 from django.utils import timezone
-from apps.notifications.models import Notification
+from apps.notifications.models import Notification, DeviceToken
 from django.contrib.auth import get_user_model
 from apps.notifications.selectors import NotificationSelectors
 from apps.notifications.events import NotificationCreatedEvent
@@ -79,3 +79,15 @@ class NotificationService:
     @staticmethod
     def get_unread_notification_count(user):
         return NotificationSelectors.get_unread_count(user=user)
+    
+    @staticmethod
+    def update_or_create_device_token(user, token, device_type):
+        return DeviceToken.objects.update_or_create(
+            token=token,
+            defaults={
+                'user': user,
+                'device_type': device_type,
+                'is_active': True,
+                'last_used_at': timezone.now(),
+            }
+        )

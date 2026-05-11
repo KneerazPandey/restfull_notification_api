@@ -28,3 +28,10 @@ class SendNotificationSerializer(serializers.Serializer):
 class BroadcastNotificationSerializer(serializers.Serializer):
     title = serializers.CharField()
     body = serializers.CharField()
+
+
+class DeviceTokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    device_type = serializers.ChoiceField(
+        choices=['adnroid', 'ios', 'web', 'desktop']
+    )

@@ -1,4 +1,4 @@
-from apps.notifications.models.notification import Notification
+from apps.notifications.models import Notification, DeviceToken
 
 
 class NotificationSelectors:
@@ -16,3 +16,9 @@ class NotificationSelectors:
             recipient=user, 
             is_read=False,
         ).count()
+    
+    @staticmethod
+    def get_user_device_token(user_id):
+        return DeviceToken.objects.filter(
+            user__id = user_id
+        ).values_list('token', flat=True)
