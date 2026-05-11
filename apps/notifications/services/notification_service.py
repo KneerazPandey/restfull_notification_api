@@ -28,7 +28,7 @@ class NotificationService:
             body=notification.body
         )
 
-        EventDispatcher.dispatch(event=event)
+        EventDispatcher.dispatch_async(event=event)
 
         return notification
 

@@ -22,3 +22,15 @@ services:
     ports:
       - 6379:6379
     container_name: redis_notification_container
+
+  celery:
+    restart: always
+    build:
+      context: .
+    volumes:
+      - .:/app
+    container_name: celery_notification_container
+    command: celery -A push_notification worker -l INFO
+    depends_on:
+      - redis
+      - push_notification_service
